@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Your Translator 💚</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7f6f2; color: #1a1a1a; min-height: 100vh; }
+.hidden { display: none !important; }
+
+/* LANDING */
+#landing { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; text-align: center; min-height: 100vh; }
+.badge { display: inline-block; background: #E1F5EE; color: #0F6E56; font-size: 12px; font-weight: 700; padding: 6px 18px; border-radius: 100px; margin-bottom: 1.5rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.landing-title { font-size: clamp(28px, 7vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; color: #111; }
+.landing-title span { color: #1D9E75; }
+.landing-sub { font-size: 16px; color: #666; max-width: 400px; line-height: 1.7; margin-bottom: 2.5rem; }
+.features { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; margin-bottom: 2.5rem; text-align: left; }
+.feat { display: flex; gap: 14px; background: white; border-radius: 14px; border: 1px solid #ebebeb; padding: 14px 16px; align-items: flex-start; }
+.feat-icon { font-size: 20px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.feat-text { font-size: 14px; color: #555; line-height: 1.55; }
+.feat-text strong { color: #111; font-weight: 700; }
+.open-btn { background: #1D9E75; color: white; border: none; padding: 16px 0; border-radius: 100px; font-size: 17px; font-weight: 700; cursor: pointer; width: 100%; max-width: 380px; font-family: inherit; letter-spacing: 0.01em; transition: background 0.15s; }
+.open-btn:hover { background: #0F6E56; }
+.fine-print { font-size: 12px; color: #bbb; margin-top: 14px; line-height: 1.6; }
+
+/* APP */
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+.app-header { background: white; border-bottom: 1px solid #ebebeb; padding: 15px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
+.green-dot { width: 11px; height: 11px; border-radius: 50%; background: #1D9E75; flex-shrink: 0; }
+.app-header-title { font-size: 15px; font-weight: 700; }
+.app-header-right { margin-left: auto; font-size: 13px; color: #aaa; }
+
+.mode-tabs { display: flex; gap: 8px; padding: 16px 20px 0; }
+.mode-tab { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid #e0e0e0; background: white; font-size: 14px; color: #777; cursor: pointer; font-family: inherit; font-weight: 500; transition: all 0.15s; }
+.mode-tab.active { background: #1D9E75; color: white; border-color: #1D9E75; font-weight: 700; }
+
+.app-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+
+.troll-warning { background: #FAEEDA; border: 1.5px solid #FAC775; border-radius: 12px; padding: 12px 16px; font-size: 13px; color: #633806; line-height: 1.55; font-weight: 500; }
+
+.card { background: white; border-radius: 14px; border: 1px solid #ebebeb; padding: 16px; }
+.card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: #c0c0c0; font-weight: 700; margin-bottom: 10px; }
+textarea { width: 100%; border: none; outline: none; font-size: 16px; color: #111; resize: none; font-family: inherit; min-height: 100px; line-height: 1.65; background: transparent; }
+textarea::placeholder { color: #d0d0d0; }
+
+.translate-btn { width: 100%; background: #1D9E75; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.translate-btn:hover { background: #0F6E56; }
+.translate-btn:disabled { background: #9FE1CB; cursor: default; }
+
+.output-text { font-size: 16px; color: #111; line-height: 1.75; white-space: pre-wrap; min-height: 70px; }
+.output-placeholder { font-size: 15px; color: #d0d0d0; font-style: italic; }
+.output-error { font-size: 15px; color: #aaa; font-style: italic; }
+
+.spinner { display: flex; gap: 6px; align-items: center; padding: 10px 0; }
+.spinner span { width: 8px; height: 8px; border-radius: 50%; background: #9FE1CB; animation: bop 1.1s ease-in-out infinite; }
+.spinner span:nth-child(2) { animation-delay: 0.2s; }
+.spinner span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bop { 0%,80%,100%{transform:scale(1);opacity:0.6} 40%{transform:scale(1.6);opacity:1} }
+
+.lang-detect { font-size: 12px; color: #1D9E75; font-weight: 600; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- LANDING PAGE -->
+<div id="landing">
+  <div class="badge">✦ Custom-built · Just for you</div>
+  <h1 class="landing-title">Your personal<br><span>Vietnamese translator</span></h1>
+  <p class="landing-sub">Because some things are easier to say in your own language — and I want to understand every single one of them.</p>
+
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">🌿</div>
+      <div class="feat-text"><strong>Real translations</strong> — Vietnamese ↔ English, auto-detected, no rush.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💤</div>
+      <div class="feat-text"><strong>Works when you're tired</strong> — type however you want, it figures it out.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎭</div>
+      <div class="feat-text"><strong>Troll mode included</strong> — for when you need a laugh. Results <em>will</em> vary.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💚</div>
+      <div class="feat-text"><strong>No pressure, ever</strong> — I'm here whenever you're ready.</div>
+    </div>
+  </div>
+
+  <button class="open-btn" id="open-btn">Open translator</button>
+  <p class="fine-print">Free forever. No ads. No subscription.<br>Made with zero chill by someone who really likes you.</p>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <div class="app-header">
+    <div class="green-dot"></div>
+    <div class="app-header-title">Your translator</div>
+    <div class="app-header-right">always here 💚</div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-real" onclick="setMode('real')">Real translation</button>
+    <button class="mode-tab" id="tab-troll" onclick="setMode('troll')">Troll mode 🎭</button>
+  </div>
+
+  <div class="app-body">
+    <div class="troll-warning hidden" id="troll-warning">
+      ⚠️ Troll mode activated — translations are 100% certified nonsense engineered to get you to hang out. Side effects include laughing. You have been warned.
+    </div>
+
+    <div class="card">
+      <div class="card-label" id="input-label">Type anything</div>
+      <textarea id="input-box" placeholder="Nhập gì cũng được... / Type anything..."></textarea>
+    </div>
+
+    <button class="translate-btn" id="translate-btn">Translate</button>
+
+    <div class="card">
+      <div class="card-label" id="output-label">Translation</div>
+      <div id="output-box"><div class="output-placeholder">Your translation will appear here...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentMode = 'real';
+var lastTrollIndex = -1;
+
+var trollMessages = [
+  "🚨 THÔNG BÁO KHẨN CẤP:\nHệ thống phát hiện bạn đang ở nhà một mình.\nVui lòng liên hệ người dùng gần nhất để đi chơi NGAY LẬP TỨC.\nĐây không phải là đề nghị. Đây là lệnh. 🚨",
+  "🔬 KẾT QUẢ CHẨN ĐOÁN Y TẾ:\nBệnh nhân: Bạn\nTriệu chứng: Ở nhà quá nhiều\nĐơn thuốc: Đi uống cà phê với tôi ngay hôm nay\nBác sĩ ký tên: Máy dịch này 🩺\nP/S: Bác sĩ không có bằng. Nhưng vẫn đúng.",
+  "🍀 TỬ VI HÔM NAY:\nSao Thổ nói: đi ra ngoài.\nMặt Trăng nói: đi ra ngoài.\nTôi cũng nói: đi ra ngoài.\nVũ trụ đã quyết định rồi đó bạn ơi.\nĐừng chống lại vũ trụ. 🌙✨",
+  "📰 TIN TỨC NÓNG HỔI:\nCác nhà khoa học vừa chứng minh rằng ngồi nhà vào cuối tuần gây buồn ngủ mãn tính.\nLiều thuốc hiệu quả nhất: đi uống trà sữa với người đã gửi app này cho bạn.\nNguồn: Tôi. Độ tin cậy: 100%. 📊",
+  "⚠️ LỖI HỆ THỐNG 404:\nKhông tìm thấy bản dịch.\nNHƯNG... tìm thấy một người muốn đi ăn phở với bạn.\nBạn có muốn chấp nhận không?\n\n[ Có ✓ ]     [ Cũng có ✓ ]",
+  "🎰 XIN CHÚC MỪNG BẠN ĐÃ TRÚNG THƯỞNG!\nGiải thưởng: Một buổi đi chơi miễn phí!\nBao gồm: Không khí tươi + cà phê ngon + một người rất vui khi thấy bạn.\nHạn sử dụng: HÔM NAY.\nĐừng để hết hạn nha! 🎉",
+  "📱 TIN NHẮN TỰ ĐỘNG:\nMáy dịch hiện đang bận xử lý câu quan trọng nhất trong lịch sử:\n'Hãy đi ra ngoài đi.'\nMọi văn bản khác tạm thời không được hỗ trợ.\nXin lỗi vì sự bất tiện. (Không xin lỗi lắm.) 🤷",
+  "🌸 THƯ TỪ VŨ TRỤ:\nCây cối nhớ bạn.\nGió nhớ bạn.\nLy cà phê nguội đang chờ bạn.\nVà tôi...\nTôi cũng đang chờ bạn.\nRa ngoài chơi với tôi đi nào~ 🌿",
+  "🏥 KẾT QUẢ XÉT NGHIỆM:\nMẫu xét nghiệm: Văn bản của bạn\nKết quả: Dương tính với 'cần đi dạo'\nKhuyến nghị bác sĩ: Mặc áo đẹp + nhắn tin cho tôi\nGhi chú: Không điều trị có thể dẫn đến tiếp tục ngồi nhà. 😌",
+  "👑 CHIẾU CHỈ HOÀNG GIA:\nTheo lệnh của Máy Dịch Tối Cao,\nNgười dùng được yêu cầu rời khỏi nhà,\nTìm đến người đã tạo ra ứng dụng kỳ lạ này,\nVà đi uống gì đó cùng nhau.\nKhông tuân lệnh sẽ bị... nhắn tin thêm. 👑",
+  "🤖 XIN CHÀO TỪ TRÍ TUỆ NHÂN TẠO:\nSau khi phân tích văn bản của bạn bằng thuật toán tiên tiến nhất...\nKết luận: Bạn nên đi chơi với người đã tạo ra tôi.\nĐộ chính xác: 100%\nĐộ khách quan: 0%\nNhưng vẫn nên đi. 🤖",
+  "💌 THƯ TÌNH TỪ MÁY DỊCH:\nEm ơi,\nAnh không biết dịch.\nAnh chỉ biết rằng anh muốn gặp em.\nHẹn gặp lại nhé?\n\nKý tên,\nNgười tạo ra ứng dụng kỳ lạ này 💚",
+  "🎬 CẢNH BÁO PHIM TÀI LIỆU:\nCác nhà làm phim đang ghi lại hậu quả của việc không đi chơi khi được mời.\nTập 1: Ngồi nhà, buồn.\nTập 2: Vẫn ngồi nhà, vẫn buồn.\nTập 3: Cuối cùng đi chơi. Vui vẻ. Hạnh phúc.\nBạn đang ở tập mấy? 🎥",
+  "📡 TÍN HIỆU TỪ NGOÀI KHÔNG GIAN:\n...beep boop...\nNgoài hành tinh đã nhận được tín hiệu của bạn.\nMessage decoded: 'Tôi cần đi ra ngoài.'\nPhản hồi từ thiên hà XJ-7: 'Đúng vậy. Đi đi.' 🛸"
+];
+
+function getNextTroll() {
+  var indices = [];
+  for (var i = 0; i < trollMessages.length; i++) {
+    if (i !== lastTrollIndex) indices.push(i);
+  }
+  var pick = indices[Math.floor(Math.random() * indices.length)];
+  lastTrollIndex = pick;
+  return trollMessages[pick];
+}
+
+function detectVietnamese(text) {
+  return /[àáâãèéêìíòóôõùúýăđơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(text);
+}
+
+document.getElementById('open-btn').onclick = function() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+};
+
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('tab-real').classList.toggle('active', m === 'real');
+  document.getElementById('tab-troll').classList.toggle('active', m === 'troll');
+  document.getElementById('troll-warning').classList.toggle('hidden', m === 'real');
+  document.getElementById('output-box').innerHTML = '<div class="output-placeholder">Your translation will appear here...</div>';
+  document.getElementById('output-label').textContent = 'Translation';
+}
+
+document.getElementById('translate-btn').onclick = function() {
+  var text = document.getElementById('input-box').value.trim();
+  if (!text) return;
+
+  if (currentMode === 'troll') {
+    var msg = getNextTroll();
+    document.getElementById('output-label').textContent = 'Certified translation 🎭';
+    document.getElementById('output-box').innerHTML = '<div class="output-text">' + msg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>';
+    return;
+  }
+
+  var btn = document.getElementById('translate-btn');
+  btn.disabled = true;
+  btn.textContent = 'Translating...';
+  document.getElementById('output-box').innerHTML = '<div class="spinner"><span></span><span></span><span></span></div>';
+
+  var isViet = detectVietnamese(text);
+  var src = isViet ? 'vi' : 'en';
+  var tgt = isViet ? 'en' : 'vi';
+  document.getElementById('output-label').textContent = isViet ? 'English' : 'Tiếng Việt';
+
+  var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + src + '|' + tgt;
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.responseStatus === 200) {
+        var result = data.responseData.translatedText;
+        document.getElementById('output-box').innerHTML = '<div class="output-text">' + result.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+      } else {
+        throw new Error('bad response');
+      }
+    })
+    .catch(function() {
+      document.getElementById('output-box').innerHTML = '<div class="output-error">Couldn\'t translate that one... but I\'m still here 💚<br><br><small>Try shorter text, or check your internet connection.</small></div>';
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Translate';
+    });
+};
+
+document.getElementById('input-box').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    document.getElementById('translate-btn').click();
+  }
+});
+</script>
+</body>
+</html>
